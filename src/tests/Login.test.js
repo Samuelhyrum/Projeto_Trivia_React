@@ -6,6 +6,7 @@ import App from '../App';
 
 const inputEmailTestId = 'input-gravatar-email';
 const inputNameTestId = 'input-player-name';
+const buttonText = /^Play/i;
 
 describe('Testa a pagina da login', () => {
   it('Verifica se possue um input para digitar o nome e outro para o email', () => {
@@ -16,5 +17,13 @@ describe('Testa a pagina da login', () => {
 
     expect(inputEmail).toBeInTheDocument();
     expect(inputName).toBeInTheDocument();
+  });
+  it('Verifica se possue um botão com o texto "Play", que comece desabilitado', () => {
+    renderWithRouterAndRedux(<App />)
+
+    const inputButton = screen.getByRole('button', { name: buttonText });
+
+    expect(inputButton).toBeInTheDocument();
+    expect(inputButton).toBeDisabled();
   });
 })
