@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import { saveToken } from '../Helpers/storage';
+import loginInfoAction from '../redux/actions';
 
 const URL = 'https://opentdb.com/api_token.php?command=request';
 class Login extends Component {
@@ -28,10 +29,12 @@ class Login extends Component {
   };
 
   handleSubmit = async () => {
-    const { history } = this.props;
+    const { history, dispatch } = this.props;
+    const { name, email } = this.state;
     const response = await fetch(URL);
     const data = await response.json();
     saveToken(data.token);
+    dispatch(loginInfoAction({ name, email }));
     history.push('/GameScreen');
   };
 
