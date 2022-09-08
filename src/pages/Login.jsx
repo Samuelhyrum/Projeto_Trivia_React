@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import { saveToken } from '../Helpers/storage';
@@ -38,32 +39,37 @@ class Login extends Component {
   render() {
     const { name, email, isButtonDisabled } = this.state;
     return (
-      <fieldset>
-        <input
-          data-testid="input-player-name"
-          type="text"
-          name="name"
-          value={ name }
-          onChange={ this.handleInputChange }
-          placeholder="Nome"
-        />
-        <input
-          data-testid="input-gravatar-email"
-          type="email"
-          name="email"
-          value={ email }
-          onChange={ this.handleInputChange }
-          placeholder="Email"
-        />
-        <button
-          data-testid="btn-play"
-          type="button"
-          disabled={ isButtonDisabled }
-          onClick={ this.handleSubmit }
-        >
-          Play
-        </button>
-      </fieldset>
+      <div>
+        <fieldset>
+          <input
+            data-testid="input-player-name"
+            type="text"
+            name="name"
+            value={ name }
+            onChange={ this.handleInputChange }
+            placeholder="Nome"
+          />
+          <input
+            data-testid="input-gravatar-email"
+            type="email"
+            name="email"
+            value={ email }
+            onChange={ this.handleInputChange }
+            placeholder="Email"
+          />
+          <button
+            data-testid="btn-play"
+            type="button"
+            disabled={ isButtonDisabled }
+            onClick={ this.handleSubmit }
+          >
+            Play
+          </button>
+        </fieldset>
+        <Link to="/settings">
+          <button data-testid="btn-settings" type="button">Configurações</button>
+        </Link>
+      </div>
     );
   }
 }
