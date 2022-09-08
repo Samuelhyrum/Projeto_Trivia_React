@@ -1,8 +1,9 @@
 import React from 'react';
-// import userEvent from '@testing-library/user-event';
-import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { screen, waitFor } from '@testing-library/react';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux'
 import App from '../App';
+import mockFectToken from './helpers/mockFectToken';
 
 const inputEmailTestId = 'input-gravatar-email';
 const inputNameTestId = 'input-player-name';
@@ -25,5 +26,36 @@ describe('Testa a pagina da login', () => {
 
     expect(inputButton).toBeInTheDocument();
     expect(inputButton).toBeDisabled();
+  });
+  it('Verifica se o botão habilita ao digitar o email e o nome', () => {
+    renderWithRouterAndRedux(<App />)
+
+    const inputName = screen.getByTestId(inputNameTestId);
+    const inputEmail = screen.getByTestId(inputEmailTestId);
+    const inputButton = screen.getByRole('button', { name: buttonText });
+
+    userEvent.type(inputEmail, 'teste2@gmail.com');
+    userEvent.type(inputName, 'Xablau');
+
+    expect(inputEmail).toHaveValue('teste2@gmail.com');
+    expect(inputName).toHaveValue('Xablau');
+    expect(inputButton).not.toBeDisabled();
+  });
+  it('Verifica se ao clicar no botão com o texto "Play" é redirecionado para pagina GameScreen', async () => {
+    jest.spyOn(global, 'fetch').mockImplementation(mockFectToken);
+
+    const { history } = renderWithRouterAndRedux(<App />)
+
+    const inputName = screen.getByTestId(inputNameTestId);
+    const inputEmail = screen.getByTestId(inputEmailTestId);
+    const inputButton = screen.getByRole('button', { name: buttonText });
+
+    userEvent.type(inputEmail, 'teste2@gmail.com');
+    userEvent.type(inputName, 'Xablau');
+    userEvent.click(inputButton)
+
+    await waitFor(() => expect(history.location.pathname).toBe('/GameScreen'));
+
+    global.fetch.mockClear();
   });
 })
