@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import { saveToken } from '../Helpers/storage';
-import loginInfoAction from '../redux/actions';
+import { loginInfoAction } from '../redux/actions';
 
 const URL = 'https://opentdb.com/api_token.php?command=request';
 class Login extends Component {
