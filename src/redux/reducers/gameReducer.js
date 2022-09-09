@@ -1,6 +1,6 @@
 const INITIAL_STATE = {
   response_code: 0,
-  results: [{}],
+  results: [],
 };
 
 const gameReducer = (state = INITIAL_STATE, action) => {
