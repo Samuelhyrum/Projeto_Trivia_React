@@ -10,6 +10,8 @@ import './GameScreen.css';
 // Falta colocar as questoes em ordem aleatoria
 // Falta fazer aparecer uma pergunta de cada vez
 
+const ONE_SECOND = 1000;
+const TIME_LIMIT = 0;
 const three = 3;
 const combinations = [
   [0, 2, three, 1],
@@ -21,16 +23,32 @@ const combinations = [
   [three, 2, 0, 1],
   [1, 2, three, 0],
 ];
+
 class GameScreen extends Component {
   state = {
+    seconds: 30,
     currentQuestion: 0,
     incorrectClass: '',
     correctClass: '',
+    combination: [],
+    isButtonDisabled: false,
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(fetchCurrencyMiddleware());
+    const combination = combinations[Math.round(Math.random()
+      * (combinations.length - 1))];
+    this.setState({ combination });
+    this.timer = setInterval(() => {
+      this.setState(({ seconds }) => ({ seconds: seconds - 1 }), () => {
+        const { seconds } = this.state;
+        if (seconds === TIME_LIMIT) {
+          clearInterval(this.timer);
+          this.setState({ isButtonDisabled: true });
+        }
+      });
+    }, ONE_SECOND);
   }
 
   componentDidUpdate() {
@@ -50,7 +68,14 @@ class GameScreen extends Component {
 
   render() {
     const { results } = this.props;
-    const { currentQuestion, incorrectClass, correctClass } = this.state;
+    const {
+      currentQuestion,
+      incorrectClass,
+      correctClass,
+      combination,
+      seconds,
+      isButtonDisabled,
+    } = this.state;
     const {
       category,
       type,
@@ -66,6 +91,7 @@ class GameScreen extends Component {
         type="button"
         className={ `button ${incorrectClass}` }
         onClick={ this.checkIsCorrect }
+        disabled={ isButtonDisabled }
       >
         { item }
       </button>
@@ -77,18 +103,22 @@ class GameScreen extends Component {
         key="button"
         className={ `button ${correctClass}` }
         onClick={ this.checkIsCorrect }
+        disabled={ isButtonDisabled }
       >
         { correctAnswer }
       </button>,
       ...createIncorrectList,
     ];
-    const combination = combinations[Math.round(Math.random()
-      * (combinations.length - 1))];
     const [indexOne, indexTwo, indexThree, indexFour] = combination;
     return (
       <section className="container">
         <Header />
         <section>
+          <h3>
+            timer
+            {' '}
+            { seconds }
+          </h3>
           <h2 data-testid="question-category">{category}</h2>
           <h3 data-testid="question-text">{question}</h3>
           { type === 'multiple' ? (
