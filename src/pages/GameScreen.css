@@ -1,0 +1,14 @@
+.correctAnswer {
+  border: 3px solid rgb(6, 240, 15);
+}
+
+.incorrectAnswer {
+  border: 3px solid red;
+}
+
+.buttons-container {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+  margin-left: 10px;
+}

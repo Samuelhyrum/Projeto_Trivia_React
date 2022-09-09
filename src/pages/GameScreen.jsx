@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import { fetchCurrencyMiddleware } from '../redux/actions';
 import { TOKEN } from '../Helpers/storage';
+import './GameScreen.css';
 
 // ok Falta fazer logout se o token estiver invalido
 // Falta colocar as questoes em ordem aleatoria
@@ -16,6 +17,8 @@ const combinations = [[0, 2, three, 1],
 class GameScreen extends Component {
   state = {
     currentQuestion: 0,
+    incorrectClass: '',
+    correctClass: '',
   };
 
   componentDidMount() {
@@ -31,19 +34,31 @@ class GameScreen extends Component {
     }
   }
 
+  checkIsCorrect = () => {
+    this.setState({
+      incorrectClass: 'incorrectAnswer',
+      correctClass: 'correctAnswer',
+    });
+  };
+
   render() {
     const { results } = this.props;
-    const { currentQuestion } = this.state;
+    const { currentQuestion, incorrectClass, correctClass } = this.state;
     const {
       category,
       type,
-      question, correct_answer: correctAnswer, incorrect_answers: incorrectAnswer,
+      question,
+      correct_answer: correctAnswer,
+      incorrect_answers: incorrectAnswer,
     } = results[currentQuestion] || {};
+
     const createIncorrectList = incorrectAnswer && incorrectAnswer.map((item, index) => (
       <button
         data-testid={ `wrong-answer-${index}` }
         key={ index }
         type="button"
+        className={ incorrectClass }
+        onClick={ this.checkIsCorrect }
       >
         { item }
       </button>
@@ -53,6 +68,8 @@ class GameScreen extends Component {
         data-testid="correct-answer"
         type="button"
         key="button"
+        className={ correctClass }
+        onClick={ this.checkIsCorrect }
       >
         { correctAnswer }
       </button>,
@@ -68,14 +85,14 @@ class GameScreen extends Component {
           <h2 data-testid="question-category">{category}</h2>
           <h3 data-testid="question-text">{question}</h3>
           { type === 'multiple' ? (
-            <div data-testid="answer-options">
+            <div className="buttons-container" data-testid="answer-options">
               {questions[indexOne]}
               {questions[indexTwo]}
               {questions[indexThree]}
               {questions[indexFour]}
             </div>
           ) : incorrectAnswer && (
-            <div data-testid="answer-options">
+            <div className="buttons-container" data-testid="answer-options">
               {
                 (Math.round(Math.random() * 2) === 2)
                   ? (
