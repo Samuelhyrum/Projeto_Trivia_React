@@ -58,14 +58,14 @@ class GameScreen extends Component {
   }
 
   onClickCorrect = () => {
-    const { results, score, dispatch } = this.props;
+    const { results, score, dispatch, assertions } = this.props;
     const { seconds, currentQuestion } = this.state;
     const { difficulty } = results[currentQuestion];
     const minPoints = 10;
     this.showAnswer();
     this.setState({ isButtonDisabled: true });
     const newScore = score + (minPoints + seconds * difficultyPoints[difficulty]);
-    dispatch(updateScore({ score: newScore }));
+    dispatch(updateScore({ score: newScore, assertions: assertions + 1 }));
   };
 
   showAnswer = () => {
@@ -85,7 +85,14 @@ class GameScreen extends Component {
       correctClass: '',
       isButtonDisabled: false,
       seconds: 30,
-    }));
+    }), () => {
+      const { currentQuestion } = this.state;
+      const lastQuestion = 4;
+      if (currentQuestion > lastQuestion) {
+        const { history } = this.props;
+        history.push('/feedback');
+      }
+    });
     this.timer();
   };
 
@@ -195,6 +202,7 @@ class GameScreen extends Component {
 const mapStateToProps = ({ gameReducer, player }) => ({
   ...gameReducer,
   score: player.score,
+  assertions: player.assertions,
 });
 GameScreen.propTypes = {
   results: PropTypes.arrayOf(
@@ -204,6 +212,7 @@ GameScreen.propTypes = {
     push: PropTypes.func,
   }),
   score: PropTypes.number,
+  assertions: PropTypes.number,
   responseCode: PropTypes.number,
   dispatch: PropTypes.func,
 }.isRequired;
