@@ -23,6 +23,12 @@ export const responseAPIFailureAction = (error) => ({
   erro: error,
 });
 
+export const UPDATE_SCORE = 'UPDATE_SCORE';
+export const updateScore = (payload) => ({
+  type: UPDATE_SCORE,
+  payload,
+});
+
 // a ação de middleware precisa obrigatoriamente retornar outra função e assícrona
 export const fetchCurrencyMiddleware = () => async (dispatch) => {
   dispatch(requestAPIAction());
