@@ -13,8 +13,17 @@
   border: 3px solid red;
 }
 
+.button {
+  min-width: 200px;
+  height: 30px;
+  /* padding: 5px; */
+}
+
 .buttons-container {
   align-items: center;
   display: flex;
   gap: 5px;
 }
+
+/* .container {
+} */

@@ -11,9 +11,16 @@ import './GameScreen.css';
 // Falta fazer aparecer uma pergunta de cada vez
 
 const three = 3;
-const combinations = [[0, 2, three, 1],
-  [three, 1, 2, 0], [three, 0, 1, 2], [1, 2, 0, three],
-  [0, 2, 1, three], [1, three, 0, 2], [three, 2, 0, 1], [1, 2, three, 0]];
+const combinations = [
+  [0, 2, three, 1],
+  [three, 1, 2, 0],
+  [three, 0, 1, 2],
+  [1, 2, 0, three],
+  [0, 2, 1, three],
+  [1, three, 0, 2],
+  [three, 2, 0, 1],
+  [1, 2, three, 0],
+];
 class GameScreen extends Component {
   state = {
     currentQuestion: 0,
@@ -57,7 +64,7 @@ class GameScreen extends Component {
         data-testid={ `wrong-answer-${index}` }
         key={ index }
         type="button"
-        className={ incorrectClass }
+        className={ `button ${incorrectClass}` }
         onClick={ this.checkIsCorrect }
       >
         { item }
@@ -68,7 +75,7 @@ class GameScreen extends Component {
         data-testid="correct-answer"
         type="button"
         key="button"
-        className={ correctClass }
+        className={ `button ${correctClass}` }
         onClick={ this.checkIsCorrect }
       >
         { correctAnswer }
@@ -79,7 +86,7 @@ class GameScreen extends Component {
       * (combinations.length - 1))];
     const [indexOne, indexTwo, indexThree, indexFour] = combination;
     return (
-      <section>
+      <section className="container">
         <Header />
         <section>
           <h2 data-testid="question-category">{category}</h2>
