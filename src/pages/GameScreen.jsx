@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import { fetchCurrencyMiddleware } from '../redux/actions';
+import { fetchCurrencyMiddleware, updateScore } from '../redux/actions';
 import { TOKEN } from '../Helpers/storage';
 import './GameScreen.css';
 
@@ -23,6 +23,7 @@ const combinations = [
   [three, 2, 0, 1],
   [1, 2, three, 0],
 ];
+const difficultyPoints = { hard: 3, medium: 2, easy: 1 };
 
 class GameScreen extends Component {
   state = {
@@ -59,7 +60,20 @@ class GameScreen extends Component {
     }
   }
 
-  checkIsCorrect = () => {
+  onClickCorrect = () => {
+    const { results, score, dispatch } = this.props;
+    const { seconds, currentQuestion } = this.state;
+    const { difficulty } = results[currentQuestion];
+    const minPoints = 10;
+    clearInterval(this.timer);
+    this.showAnswer();
+    this.setState({ isButtonDisabled: true });
+    const newScore = score + (minPoints + seconds * difficultyPoints[difficulty]);
+    console.log(newScore);
+    dispatch(updateScore({ score: newScore }));
+  };
+
+  showAnswer = () => {
     this.setState({
       incorrectClass: 'incorrectAnswer',
       correctClass: 'correctAnswer',
@@ -90,7 +104,7 @@ class GameScreen extends Component {
         key={ index }
         type="button"
         className={ `button ${incorrectClass}` }
-        onClick={ this.checkIsCorrect }
+        onClick={ this.showAnswer }
         disabled={ isButtonDisabled }
       >
         { item }
@@ -101,8 +115,9 @@ class GameScreen extends Component {
         data-testid="correct-answer"
         type="button"
         key="button"
+        name="correct-answer"
         className={ `button ${correctClass}` }
-        onClick={ this.checkIsCorrect }
+        onClick={ this.onClickCorrect }
         disabled={ isButtonDisabled }
       >
         { correctAnswer }
@@ -146,8 +161,9 @@ class GameScreen extends Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
-  ...state.gameReducer,
+const mapStateToProps = ({ gameReducer, player }) => ({
+  ...gameReducer,
+  score: player.score,
 });
 GameScreen.propTypes = {
   results: PropTypes.arrayOf(
@@ -156,6 +172,7 @@ GameScreen.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
+  score: PropTypes.number,
   responseCode: PropTypes.number,
   dispatch: PropTypes.func,
 }.isRequired;
