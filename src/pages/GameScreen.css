@@ -1,3 +1,10 @@
+* {
+  border: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .correctAnswer {
   border: 3px solid rgb(6, 240, 15);
 }
@@ -10,5 +17,4 @@
   align-items: center;
   display: flex;
   gap: 5px;
-  margin-left: 10px;
 }
