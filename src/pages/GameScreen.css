@@ -14,9 +14,8 @@
 }
 
 .button {
-  min-width: 200px;
   height: 30px;
-  /* padding: 5px; */
+  min-width: 200px;
 }
 
 .buttons-container {
@@ -24,6 +23,3 @@
   display: flex;
   gap: 5px;
 }
-
-/* .container {
-} */
