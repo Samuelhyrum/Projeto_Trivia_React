@@ -33,6 +33,7 @@ class GameScreen extends Component {
     correctClass: '',
     combination: [],
     isButtonDisabled: false,
+    buttonNextOpen: false,
   };
 
   componentDidMount() {
@@ -41,15 +42,7 @@ class GameScreen extends Component {
     const combination = combinations[Math.round(Math.random()
       * (combinations.length - 1))];
     this.setState({ combination });
-    this.timer = setInterval(() => {
-      this.setState(({ seconds }) => ({ seconds: seconds - 1 }), () => {
-        const { seconds } = this.state;
-        if (seconds === TIME_LIMIT) {
-          clearInterval(this.timer);
-          this.setState({ isButtonDisabled: true });
-        }
-      });
-    }, ONE_SECOND);
+    this.timer();
   }
 
   componentDidUpdate() {
@@ -60,24 +53,52 @@ class GameScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+  }
+
   onClickCorrect = () => {
     const { results, score, dispatch } = this.props;
     const { seconds, currentQuestion } = this.state;
     const { difficulty } = results[currentQuestion];
     const minPoints = 10;
-    clearInterval(this.timer);
     this.showAnswer();
     this.setState({ isButtonDisabled: true });
     const newScore = score + (minPoints + seconds * difficultyPoints[difficulty]);
-    console.log(newScore);
     dispatch(updateScore({ score: newScore }));
   };
 
   showAnswer = () => {
+    clearInterval(this.timerId);
     this.setState({
+      buttonNextOpen: true,
       incorrectClass: 'incorrectAnswer',
       correctClass: 'correctAnswer',
     });
+  };
+
+  nextQuestion = () => {
+    this.setState(({ currentQuestion }) => ({
+      currentQuestion: currentQuestion + 1,
+      buttonNextOpen: false,
+      incorrectClass: '',
+      correctClass: '',
+      isButtonDisabled: false,
+      seconds: 30,
+    }));
+    this.timer();
+  };
+
+  timer = () => {
+    this.timerId = setInterval(() => {
+      this.setState(({ seconds }) => ({ seconds: seconds - 1 }), () => {
+        const { seconds } = this.state;
+        if (seconds === TIME_LIMIT) {
+          clearInterval(this.timerId);
+          this.setState({ isButtonDisabled: true, buttonNextOpen: true });
+        }
+      });
+    }, ONE_SECOND);
   };
 
   render() {
@@ -89,6 +110,7 @@ class GameScreen extends Component {
       combination,
       seconds,
       isButtonDisabled,
+      buttonNextOpen,
     } = this.state;
     const {
       category,
@@ -155,6 +177,15 @@ class GameScreen extends Component {
                   )
               }
             </div>
+          )}
+          { buttonNextOpen && (
+            <button
+              type="button"
+              data-testid="btn-next"
+              onClick={ this.nextQuestion }
+            >
+              Next
+            </button>
           )}
         </section>
       </section>
