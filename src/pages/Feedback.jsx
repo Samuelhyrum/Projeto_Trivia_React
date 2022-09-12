@@ -4,9 +4,22 @@ import { Link } from 'react-router-dom';
 import propTypes from 'prop-types';
 import Header from '../components/Header';
 import { updateScore } from '../redux/actions';
+import { getItem, RANKING, saveItem } from '../Helpers/storage';
 
 const assertionsNumber = 3;
 class Feedback extends Component {
+  componentDidMount() {
+    const { name, gravatarEmail, score } = this.props;
+    const ranking = getItem(RANKING) || [];
+    const player = {
+      name,
+      gravatarEmail,
+      score,
+    };
+    const array = [...ranking, player];
+    saveItem(RANKING, array);
+  }
+
   playAgain = () => {
     const { history, dispatch } = this.props;
     dispatch(updateScore({ score: 0, assertions: 0 }));
