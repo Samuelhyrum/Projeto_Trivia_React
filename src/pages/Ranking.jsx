@@ -26,7 +26,7 @@ class Ranking extends Component {
     const { ranking } = this.state;
     return (
       <div>
-        <div data-testid="ranking-title">Ranking</div>
+        <h2 data-testid="ranking-title">Ranking</h2>
         <button
           data-testid="btn-go-home"
           type="button"
