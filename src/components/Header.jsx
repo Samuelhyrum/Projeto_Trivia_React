@@ -11,7 +11,7 @@ class Header extends Component {
       <header>
         <img
           src={ `https://www.gravatar.com/avatar/${emailHash}` }
-          alt=""
+          alt="avatar"
           data-testid="header-profile-picture"
         />
         <h4
