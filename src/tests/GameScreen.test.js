@@ -4,7 +4,7 @@ import { screen, waitFor } from '@testing-library/react';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux'
 import App from '../App';
 import mockFectApi from './helpers/mockFectApi';
-import GameScreen from '../pages/GameScreen';
+import GameScreen from '../pages/Game';
 
 const initialState = {player: {score: 0, assertions: 0, name: 'xablau', gravatarEmail: 'xablau@gmail.com' }}
 
